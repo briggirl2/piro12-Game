@@ -80,14 +80,18 @@ def ready(request):
         else:
             return redirect('profile')
     else:
-        User = get_user_model()
-        users = User.objects.all()
-        users_ex = User.objects.all().exclude(username=request.user)
-        context = {
-            'users': users,
-            'users_ex': users_ex
-        }
-        return render(request, 'game/ready.html', context)
+        print(request.user.is_authenticated)
+        if request.user.is_authenticated:
+            User = get_user_model()
+            # users = User.objects.all()
+            users_ex = User.objects.all().exclude(username=request.user)
+            context = {
+                # 'users': users,
+                'users_ex': users_ex,
+            }
+            return render(request, 'game/ready.html', context)
+        else:
+            return redirect('game:select_login')
 
 
 @login_required()
@@ -106,7 +110,7 @@ def mygame(request):
 def challenge(request):
     #request.session['user_name'] = request.user.username
     #print(request.session['user_name'], request.session['opponent_id'])
-    opponent = get_user_model().objects.filter(id=request.session['opponent_id'])[0]
+    # opponent = get_user_model().objects.filter(id=request.session['opponent_id'])[0]
     if request.method == 'POST':
         form = ChallengeForm(
             request.user, #현재 유저는 defender 목록에서 제외시키기 위해 인자로 지정 -> forms.py 13번째 username
@@ -144,18 +148,25 @@ def challenge(request):
             return render(request, 'game/mygame.html', context)
 
     else:
-        form = ChallengeForm(
-            request.user, #여기로 get타고 들어와서 request.POST 빼버림.
-            instance=request.user,
-            initial={
-                'attacker': request.user.id,
-                'defender': request.session['opponent_id']
-            },
-            #수정시 placeholder가 아니라 initial를 설정하면 되는 것임!
-        )
+        if request.user.is_authenticated:
+            User = get_user_model()
+            users = User.objects.all()
+            other_users_cnt = users.count() - 1
+            form = ChallengeForm(
+                request.user, #여기로 get타고 들어와서 request.POST 빼버림.
+                instance=request.user,
+                initial={
+                    'attacker': request.user.id,
+                    # 'defender': request.session['opponent_id']
+                },
+                #수정시 placeholder가 아니라 initial를 설정하면 되는 것임!
+            )
+        else:
+            return redirect('game:select_login')
+
     return render(request, 'game/challenge.html', {
         'form': form,
-        'opponent': opponent
+        'other_users_cnt': other_users_cnt,
     })
 
 
@@ -231,6 +242,6 @@ def ing_challenge(request, pk):
                 'game': game,
                 'form': form,
                 'att_choice': dict[game.att_choice],
-                'dfd_choice' : dict[game.dfd_choice]
+                'dfd_choice': dict[game.dfd_choice]
             }
             return render(request, 'game/result_challenge.html', context)
