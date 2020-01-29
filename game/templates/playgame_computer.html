@@ -1,0 +1,18 @@
+{% extends "game/layout.html" %}
+{% block content %}
+    <h4>Game with Computer</h4>
+    <div>
+        <h5> 무엇을 낼건가요?</h5>
+        <form action="" method="post">
+            {% csrf_token %}
+            <select name="seleted_action">
+                <option value="" selected="selected" disabled>-</option>
+                <option value="가위">가위</option>
+                <option value="바위">바위</option>
+                <option value="보">보</option>
+            </select>
+            <input type="submit" value="제출" class="btn btn-primary"/>
+
+        </form>
+    </div>
+{% endblock %}
