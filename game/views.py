@@ -1,12 +1,5 @@
 import random
 
-import json
-import requests
-from django.contrib.auth.models import User
-from django.views import View
-from django.http import JsonResponse, HttpResponse
-
-from .loginView import KakaoLoginView
 from django.shortcuts import render
 
 
