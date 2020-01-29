@@ -1,0 +1,19 @@
+{% extends "game/layout.html" %}
+{% block content %}
+
+<h1>리스트페이지</h1>
+<ul>
+    <div class="row">
+        {% for r in record %}
+        <div class="col mb-4">
+            <div class="list">
+                <h2>컴퓨터 vs. 나의 전적</h2>
+                <p class="price">컴퓨터 vs 인간</p>
+                <button type="button" class="btn btn-info"><a href="{% url "gamedetail" record.pk %}"></a>게임정보</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</ul>
+
+{% endblock %}
