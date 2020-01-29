@@ -12,4 +12,9 @@ urlpatterns = [
     # path('gamestart/', views.gamestart, name='gamestart'),  # 가위바위보하는 페이지
     path('gamelist/', views.gamelist, name='gamelist'),  # 게임 전적 보는 페이지
     path('gamedetail/<int:pk>', views.gamedetail, name='gamedetail'), #게임 전적 디테일 페이지
+
+    #
+    path('ready/', views.ready, name='ready'),
+    path('challenge/', views.challenge, name='challenge'),
+    path('ing/<int:pk>/', views.ing_challenge, name='ing_challenge'),
 ]

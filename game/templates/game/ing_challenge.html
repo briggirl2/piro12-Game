@@ -1,0 +1,40 @@
+{% extends 'game/layout.html' %}
+{% block content %}
+
+    <h1>You're being Attacked!</h1>
+    <h2>{{ game.attacker }}에게 도전을 받았습니다. 24시간 내에 응답이 없으면 대결은 무효가 됩니다.</h2>
+    <p>Rock beats Scissors, Scissors beat Paper, Paper beats Rock, and so on</p>
+    <p>{{ game.defender }}님, 어서 방어하세요!</p>
+    <p>공격 시간: {{ game.att_at }}</p>
+
+    <form action="" method="post" class="form-horizontal">
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endfor %}
+    {% for field in form.hidden_fields %}
+        {{ field }}
+    {% endfor %}
+    {% for field in form.visible_fields %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+                <p class="help-block">
+                    {{ field.help_text }}
+                </p>
+            {% endif %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+{#        </div>#}
+        </div>
+    {% endfor %}
+    <input type="submit" value="도전에 응수">
+</form>
+
+{% endblock %}

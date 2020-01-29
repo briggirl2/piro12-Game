@@ -1,0 +1,8 @@
+{% extends 'game/layout.html' %}
+{% block content %}
+    <h1>The Enemy has not responded...</h1>
+    <h2>{{ game.defender }}님께 보낸 도전장입니다.</h2>
+    <p>Rock beats Scissors, Scissors beat Paper, Paper beats Rock, and so on</p>
+    <p>{{ game.defender }}님이 아직 방어 무기를 선택하지 않았습니다.</p>
+    <p>공격 시간: {{ game.att_at }}</p>
+{% endblock %}

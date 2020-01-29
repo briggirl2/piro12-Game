@@ -1,16 +1,17 @@
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
-class Record(models.Model):
-    INPUT_CHOICES = (
-        ('가위', '가위'),
-        ('바위', '바위'),
-        ('보', '보')
+class Game(models.Model):
+    weapons = (
+        (2, '바위'),
+        (1, '가위'),
+        (0, '보')
     )
-
-    user1 = models.CharField(max_length=50)
-    user2 = models.CharField(max_length=50)
-    user1_input = models.CharField(max_length=10, choices=INPUT_CHOICES)
-    user2_input = models.CharField(max_length=10, choices=INPUT_CHOICES)
-    result = models.CharField(max_length=30)
+    attacker = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='attacker')
+    defender = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='defender')
+    att_choice = models.IntegerField(choices=weapons)
+    dfd_choice = models.IntegerField(choices=weapons, blank=True, null=True)
+    att_at = models.DateTimeField(auto_now_add=True)
+    winner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='winner', blank=True, null=True)
+    loser = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='loser', blank=True, null=True)

@@ -1,0 +1,22 @@
+{% extends 'game/layout.html' %}
+{% block content %}
+    <h1>
+        {% if game.winner == request.user %}
+            승리하였습니다!
+        {% elif game.loser == request.user %}
+            아쉽게 패배하였습니다.
+        {% else %}
+            비겼습니다.
+        {% endif %}
+    </h1>
+    <h2>{{ game.attacker }}님이 공격하였습니다 - {{ att_choice }}</h2>
+    <h2>{{ game.defender }}님은 방어하였습니다. - {{ dfd_choice }}</h2>
+    <p>공격 시간: {{ game.att_at }}</p>
+    {% if game.winner and game.loser %}
+    승리자: {{ game.winner }}
+    패배자: {{ game.loser }}
+    {% else %}
+        무승부
+    {% endif %}
+    <p></p>
+{% endblock %}
