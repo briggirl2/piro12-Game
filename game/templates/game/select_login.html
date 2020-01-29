@@ -1,0 +1,10 @@
+{% extends "game/layout.html" %}
+{% block content %}
+    {% load socialaccount %} {% providers_media_js %}
+    <a href="https://kauth.kakao.com/oauth/authorize?client_id=4ab6c9e4504646c05f4a6370251f1cd4&redirect_uri=http://localhost:8000&response_type=code">
+        Kakao Login</a>
+    <br><br>
+    <a href=" {% provider_login_url 'google' %}">Google Login</a><br>
+
+
+{% endblock %}

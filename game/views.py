@@ -1,5 +1,12 @@
 import random
 
+import json
+import requests
+from django.contrib.auth.models import User
+from django.views import View
+from django.http import JsonResponse, HttpResponse
+
+from .loginView import KakaoLoginView
 from django.shortcuts import render
 
 
@@ -9,7 +16,7 @@ def home(request):
 
 def playgame_computer(request):
     if request.method == 'GET':
-        return render(request, 'playgame_computer.html', {})
+        return render(request, 'game/playgame_computer.html', {})
     elif request.method == 'POST':
         user1_input = request.POST['seleted_action']
         print(user1_input)
@@ -45,3 +52,7 @@ def makeresult(a, b):
             return 2
         elif b == '바위':
             return 1
+
+
+def select_login(request):
+    return render(request, 'game/select_login.html')
