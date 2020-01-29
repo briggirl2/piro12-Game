@@ -1,0 +1,41 @@
+{% extends 'game/layout.html' %}
+{% block content %}
+    {{ user.username }}님에게 온 도전장입니다.
+    <ul>
+        {% for game in games_p %}
+            <li>
+                <a href="{% url 'game:ing_challenge' game.id %}">
+                    {{ game.att_at }} -  From. {{ game.attacker }} - {{ game.id }}번째 게임입니다.
+                    {% if game.dfd_choice is None %}
+                        아직 진행 중입니다.
+                    {% elif game.winner == None and game.loser == None %}
+                        무
+                    {% elif game.winner == request.user %}
+                        승
+                    {% else %}
+                        패
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    {{ user.username }}님이 보낸 도전장입니다.
+    <ol>
+        {%for game in games_a %}
+    li>
+                <a href="{% url 'game:ing_challenge' game.id %}">
+                    {{ game.att_at }} -  To. {{ game.defender }} - {{ game.id }}번째 게임입니다.
+                    {% if game.dfd_choice is None %}
+                        아직 진행 중입니다.
+                    {% elif game.winner == None and game.loser == None %}
+                        무
+                    {% elif game.winner == request.user %}
+                        승
+                    {% else %}
+                        패
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

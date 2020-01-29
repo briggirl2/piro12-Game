@@ -17,4 +17,5 @@ urlpatterns = [
     path('ready/', views.ready, name='ready'),
     path('challenge/', views.challenge, name='challenge'),
     path('ing/<int:pk>/', views.ing_challenge, name='ing_challenge'),
+    path('mygame/', views.mygame, name='mygame'),
 ]

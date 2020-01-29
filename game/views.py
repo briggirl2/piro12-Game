@@ -91,6 +91,18 @@ def ready(request):
 
 
 @login_required()
+def mygame(request):
+    request.session['user_id'] = request.user.id
+    games_passive = Game.objects.filter(defender=request.user.id)
+    games_active = Game.objects.filter(attacker=request.user.id)
+    context = {
+        'games_p': games_passive,
+        'games_a': games_active
+    }
+    return render(request, 'game/mygame.html', context)
+
+
+@login_required()
 def challenge(request):
     #request.session['user_name'] = request.user.username
     #print(request.session['user_name'], request.session['opponent_id'])
@@ -115,12 +127,22 @@ def challenge(request):
                 defender_id=_defender
             )
 
-            print("aaaaaaa")
             #https://wayhome25.github.io/django/2017/05/06/django-form/
             #game.attacker.set(_attacker)
             #game.defender.set(_defender)
             #Direct assignment to the forward side of a many-to-many set is prohibited
-            return render(request, 'game/home.html')
+
+            # next_url = request.GET.get('next') or 'mygame'
+            # return render(request, )
+            request.session['user_id'] = request.user.id
+            games_passive = Game.objects.filter(defender=request.user.id)
+            games_active = Game.objects.filter(attacker=request.user.id)
+            context = {
+                'games_p': games_passive,
+                'games_a': games_active
+            }
+            return render(request, 'game/mygame.html', context)
+
     else:
         form = ChallengeForm(
             request.user, #여기로 get타고 들어와서 request.POST 빼버림.

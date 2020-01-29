@@ -1,0 +1,16 @@
+{% extends 'game/layout.html' %}
+{% block content %}
+    <h2>Nickname: {{ user.nickname }}</h2>
+    {{ user.id }}번째 플레이어입니다.
+    <h3>Email</h3>
+    {{ user.email | default:"&dash;" }}
+    <h3>Bio</h3>
+    {{ user.profile.bio | default:"&dash;" }}
+    <h3>Since</h3>
+    {{ user.date_joined }}
+    <hr>
+    <p>
+        <a href="{% url "game:mygame" %}">도전장 모아보기</a>
+    </p>
+
+{% endblock %}
