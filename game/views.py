@@ -2,6 +2,7 @@ import random
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from game.forms import ChallengeForm, AcceptChallengeForm
@@ -72,36 +73,41 @@ def gamedetail(request, pk):
     # # 전적보기
 
 
-def ready(request):
-    if request.method == "POST":
-        if request.user:
-            request.session['opponent_id'] = request.POST.get('opponent_id')
-            return redirect('game:challenge')
-        else:
-            return redirect('profile')
-    else:
-        print(request.user.is_authenticated)
-        if request.user.is_authenticated:
-            User = get_user_model()
-            # users = User.objects.all()
-            users_ex = User.objects.all().exclude(username=request.user)
-            context = {
-                # 'users': users,
-                'users_ex': users_ex,
-            }
-            return render(request, 'game/ready.html', context)
-        else:
-            return redirect('game:select_login')
+# def ready(request):
+#     if request.method == "POST":
+#         if request.user:
+#             request.session['opponent_id'] = request.POST.get('opponent_id')
+#             return redirect('game:challenge')
+#         else:
+#             return redirect('profile')
+#     else:
+#         print(request.user.is_authenticated)
+#         if request.user.is_authenticated:
+#             User = get_user_model()
+#             # users = User.objects.all()
+#             users_ex = User.objects.all().exclude(username=request.user)
+#             context = {
+#                 # 'users': users,
+#                 'users_ex': users_ex,
+#             }
+#             return render(request, 'game/ready.html', context)
+#         else:
+#             return redirect('game:select_login')
 
 
 @login_required()
 def mygame(request):
     request.session['user_id'] = request.user.id
-    games_passive = Game.objects.filter(defender=request.user.id)
-    games_active = Game.objects.filter(attacker=request.user.id)
+    # games_passive = Game.objects.filter(defender=request.user.id)
+    # games_active = Game.objects.filter(attacker=request.user.id)
+    # context = {
+    #     'games_p': games_passive,
+    #     'games_a': games_active
+    # }
+    # return render(request, 'game/mygame.html', context)
+    games = Game.objects.filter(Q(defender=request.user.id) | Q(attacker=request.user.id))
     context = {
-        'games_p': games_passive,
-        'games_a': games_active
+        'games': games,
     }
     return render(request, 'game/mygame.html', context)
 
@@ -139,11 +145,11 @@ def challenge(request):
             # next_url = request.GET.get('next') or 'mygame'
             # return render(request, )
             request.session['user_id'] = request.user.id
-            games_passive = Game.objects.filter(defender=request.user.id)
-            games_active = Game.objects.filter(attacker=request.user.id)
+            # games_passive = Game.objects.filter(defender=request.user.id)
+            # games_active = Game.objects.filter(attacker=request.user.id)
+            games = Game.objects.filter(Q(defender=request.user.id) | Q(attacker=request.user.id))
             context = {
-                'games_p': games_passive,
-                'games_a': games_active
+                'games': games,
             }
             return render(request, 'game/mygame.html', context)
 
@@ -181,16 +187,16 @@ def ing_challenge(request, pk):
         'game': game,
         'form': form,
     }
+    dict = {
+        2: '바위',
+        1: '가위',
+        0: '보'
+    }
     print(game.dfd_choice)
     if game.attacker == request.user:
         if game.dfd_choice is None:
             return render(request, 'game/not_yet.html', context)
         else:
-            dict = {
-                2: '바위',
-                1: '가위',
-                0: '보'
-            }
             context = {
                 'game': game,
                 'form': form,
@@ -233,11 +239,7 @@ def ing_challenge(request, pk):
                     return redirect('game:ing_challenge', pk)
             return render(request, 'game/ing_challenge.html', context)
         else:
-            dict = {
-                2: '바위',
-                1: '가위',
-                0: '보'
-            }
+
             context = {
                 'game': game,
                 'form': form,

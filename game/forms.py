@@ -11,6 +11,7 @@ class ChallengeForm(forms.ModelForm):
             'defender': '상대방',
             'att_choice': '무기 선택'
         }
+
     def __init__(self, username, *args, **kwargs) -> object:
         super(ChallengeForm, self).__init__(*args, **kwargs)
         self.fields['defender'].queryset = get_user_model().objects.all().exclude(username=username)

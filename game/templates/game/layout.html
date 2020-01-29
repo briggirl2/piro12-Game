@@ -74,7 +74,7 @@
         <nav class="nav justify-content-end">
             {% if user.is_authenticated %}
                 <a class="p-2 text-muted" href = "/accounts/logout">로그아웃</a>
-                <a class="p-2 text-muted" href="#">전적보기</a>
+                <a class="p-2 text-muted" href="{% url 'game:mygame' %}">전적보기</a>
             {% else %}
                 <a class="p-2 text-muted" href="{% url 'game:select_login' %}">로그인</a>
             {% endif %}
