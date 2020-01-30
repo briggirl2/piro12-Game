@@ -105,7 +105,7 @@ def mygame(request):
     #     'games_a': games_active
     # }
     # return render(request, 'game/mygame.html', context)
-    games = Game.objects.filter(Q(defender=request.user.id) | Q(attacker=request.user.id))
+    games = Game.objects.filter(Q(defender=request.user.id) | Q(attacker=request.user.id)).order_by('-id')
     context = {
         'games': games,
     }
