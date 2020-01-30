@@ -15,7 +15,7 @@ class ChallengeForm(forms.ModelForm):
     def __init__(self, username, *args, **kwargs) -> object:
         super(ChallengeForm, self).__init__(*args, **kwargs)
         self.fields['defender'].queryset = get_user_model().objects.all().exclude(username=username)
-        #https://simpleisbetterthancomplex.com/questions/2017/03/22/how-to-dynamically-filter-modelchoices-queryset-in-a-modelform.html
+        # https://simpleisbetterthancomplex.com/questions/2017/03/22/how-to-dynamically-filter-modelchoices-queryset-in-a-modelform.html
 
 
 class AcceptChallengeForm(forms.ModelForm):

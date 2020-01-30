@@ -112,7 +112,7 @@ def mygame(request):
     return render(request, 'game/mygame.html', context)
 
 
-@login_required()
+# 2
 def challenge(request):
     #request.session['user_name'] = request.user.username
     #print(request.session['user_name'], request.session['opponent_id'])
