@@ -37,7 +37,7 @@ def playgame_computer(request):
 
 def makeresult(a, b):
     if a == b:
-        return 0 # 무승부
+        return 0
     elif a == '가위':
         if b == '바위':
             return 2
@@ -59,52 +59,10 @@ def select_login(request):
     return render(request, 'game/select_login.html')
 
 
-def gamelist(request):
-    # record = Record.objects.all()
-    # return render(request, 'game/list.html', {'record:': record, })
-    # 전적리스트
-    return render(request, 'game/list.html')
-
-
-def gamedetail(request, pk):
-    pass
-    # # record = Record.objects.get(id=pk)
-    # return render(request, 'game/detail.html', {'record:': record, })
-    # # 전적보기
-
-
-# def ready(request):
-#     if request.method == "POST":
-#         if request.user:
-#             request.session['opponent_id'] = request.POST.get('opponent_id')
-#             return redirect('game:challenge')
-#         else:
-#             return redirect('profile')
-#     else:
-#         print(request.user.is_authenticated)
-#         if request.user.is_authenticated:
-#             User = get_user_model()
-#             # users = User.objects.all()
-#             users_ex = User.objects.all().exclude(username=request.user)
-#             context = {
-#                 # 'users': users,
-#                 'users_ex': users_ex,
-#             }
-#             return render(request, 'game/ready.html', context)
-#         else:
-#             return redirect('game:select_login')
-
-
-@login_required()
 def mygame(request):
+    if not request.user.is_authenticated:
+        return redirect('game:select_login')
     request.session['user_id'] = request.user.id
-    # games_passive = Game.objects.filter(defender=request.user.id)
-    # games_active = Game.objects.filter(attacker=request.user.id)
-    # context = {
-    #     'games_p': games_passive,
-    #     'games_a': games_active
-    # }
-    # return render(request, 'game/mygame.html', context)
     games = Game.objects.filter(Q(defender=request.user.id) | Q(attacker=request.user.id)).order_by('-id')
     context = {
         'games': games,
@@ -112,11 +70,7 @@ def mygame(request):
     return render(request, 'game/mygame.html', context)
 
 
-# 2
 def challenge(request):
-    #request.session['user_name'] = request.user.username
-    #print(request.session['user_name'], request.session['opponent_id'])
-    # opponent = get_user_model().objects.filter(id=request.session['opponent_id'])[0]
     if request.method == 'POST':
         form = ChallengeForm(
             request.user, #현재 유저는 defender 목록에서 제외시키기 위해 인자로 지정 -> forms.py 13번째 username
@@ -142,11 +96,7 @@ def challenge(request):
             #game.defender.set(_defender)
             #Direct assignment to the forward side of a many-to-many set is prohibited
 
-            # next_url = request.GET.get('next') or 'mygame'
-            # return render(request, )
             request.session['user_id'] = request.user.id
-            # games_passive = Game.objects.filter(defender=request.user.id)
-            # games_active = Game.objects.filter(attacker=request.user.id)
             games = Game.objects.filter(Q(defender=request.user.id) | Q(attacker=request.user.id))
             context = {
                 'games': games,
@@ -176,8 +126,9 @@ def challenge(request):
     })
 
 
-@login_required()
 def ing_challenge(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('game:select_login')
     game = get_object_or_404(Game, id=pk)
     form = AcceptChallengeForm(
         request.POST,
@@ -201,7 +152,7 @@ def ing_challenge(request, pk):
                 'game': game,
                 'form': form,
                 'att_choice': dict[game.att_choice],
-                'dfd_choice' : dict[game.dfd_choice]
+                'dfd_choice': dict[game.dfd_choice]
             }
             return render(request, 'game/result_challenge.html', context)
     else:
@@ -239,7 +190,6 @@ def ing_challenge(request, pk):
                     return redirect('game:ing_challenge', pk)
             return render(request, 'game/ing_challenge.html', context)
         else:
-
             context = {
                 'game': game,
                 'form': form,
